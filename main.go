@@ -37,6 +37,12 @@ func init() {
 	}
 }
 
+func format(weather Weather) {
+	fmt.Print("WEATHER:\n")
+	fmt.Printf("%s", weather.Location.Name)
+	fmt.Printf("%f", weather.Current.Temp_f)
+}
+
 func main() {
 	key := os.Getenv("KEY")
 	url := fmt.Sprintf("http://api.weatherapi.com/v1/current.json?key=%s&q=Memphis&aqi=no", key)
@@ -60,5 +66,5 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("%s", weather.Location.Name)
+	format(weather)
 }
