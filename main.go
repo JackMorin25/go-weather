@@ -39,8 +39,9 @@ func init() {
 
 func format(weather Weather) {
 	fmt.Print("WEATHER:\n")
-	fmt.Printf("%s", weather.Location.Name)
-	fmt.Printf("%f", weather.Current.Temp_f)
+	fmt.Printf("City: %s\n", weather.Location.Name)
+	fmt.Printf("Temp: %.2fF\n", weather.Current.Temp_f)
+	fmt.Printf("Cond: %s\n", weather.Current.Condition.Text)
 }
 
 func main() {
@@ -66,5 +67,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	//takes weather and formats fields to be printed to command line
 	format(weather)
 }
