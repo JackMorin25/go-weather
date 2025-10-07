@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"github.com/joho/godotenv"
 	"io"
@@ -44,7 +45,46 @@ func format(weather Weather) {
 	fmt.Printf("Cond: %s\n", weather.Current.Condition.Text)
 }
 
+func format_flag(weather Weather) {
+	fmt.Printf("%s", ascii_cloud_formatter(weather.Current.Condition.Text))
+}
+
+func ascii_cloud_formatter(condition string) string {
+	if condition == "Clear" || condition == "Sunny" {
+		return `
+				┌───────────────────────┐
+				│  🌞 Clear / Sunny     │
+				│        \   /          │
+				│         .-.           │
+				│      ‒ (   ) ‒        │
+				│         '-’           │
+				│        /   \          │
+				└───────────────────────┘`
+	} else if condition == "Rain" {
+		return `
+		    ┌───────────────────────┐
+        │  🌧️ Rain      ☔️      │
+        │  .-.          .-.     │
+        │ (   ).      (   ).    │
+        │ (___(__)    (___(__)  │
+        │ ‚‘‚‘‚‘‚‘    ‚’‚’‚’‚’  │
+        └───────────────────────┘`
+	} else if condition == "Partly cloudy" {
+		return `	┌───────────────────────┐
+        │  🌤️ Partly Cloudy ☀️  │
+        │     \   ☁️    /       │
+        │      .--.             │
+        │   - (    ).     ☀️    │
+        │     (___.__)          │
+        └───────────────────────┘`
+	}
+	return ""
+}
+
 func main() {
+	flagPtr := flag.Bool("w", false, "a bool")
+	flag.Parse()
+
 	key := os.Getenv("KEY")
 	url := fmt.Sprintf("http://api.weatherapi.com/v1/current.json?key=%s&q=Memphis&aqi=no", key)
 	res, err := http.Get(url)
@@ -68,5 +108,10 @@ func main() {
 		panic(err)
 	}
 	//takes weather and formats fields to be printed to command line
-	format(weather)
+	if *flagPtr {
+		format_flag(weather)
+	} else {
+		format(weather)
+	}
+
 }
